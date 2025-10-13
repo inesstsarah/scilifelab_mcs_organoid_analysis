@@ -1,0 +1,10 @@
+spikeinterface
+neo
+elephant
+quantities
+mne
+scipy
+numpy
+pandas
+matplotlib
+networkx
