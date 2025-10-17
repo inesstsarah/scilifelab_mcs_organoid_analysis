@@ -11,3 +11,6 @@ networkx
 McsPyDataTools
 pytest
 scikit-learn
+kilosort
+spikeinterface[full]
+pyedflib
