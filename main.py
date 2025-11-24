@@ -32,3 +32,20 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import bombcell as bc
+
+# Import from modules
+from modules.filters import lowpass_filter
+import config
+
+
+FILE_PATH = config.FILENAME
+file = file = McsPy.McsData.RawData(FILE_PATH)
+electrode_stream = file.recordings[0].analog_streams[0]
+
+# Get sampling frequency from file
+fs = (getattr(electrode_stream.channel_infos[0], 'sampling_frequency')) 
+
+# Filtering
+# Do processing on all the signals within electrode stream
+
+# Delete unresponsive/uninformative 
