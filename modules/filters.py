@@ -17,3 +17,4 @@ def notch_filter(x, fs, freq=50.0, q=30):
 
 def mad(x):
     return np.median(np.abs(x - np.median(x))) / 0.6745
+

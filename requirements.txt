@@ -14,3 +14,4 @@ scikit-learn
 kilosort
 spikeinterface[full]
 pyedflib
+MEArec
