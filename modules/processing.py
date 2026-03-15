@@ -22,12 +22,12 @@ def thresholding_voltage(signal, fs, electrode_stream, range_in_s = (0,120)): #T
     plt.show()
 
     crossings = detect_threshold_crossings(signal, fs, spike_threshold, 0.003) # dead time of 3 ms
-    spks = align_to_minimum(signal, fs, crossings, 0.002) # search range 2 ms
+    spks = align_to_minimum(signal, fs, crossings, 0.004) # search range 2 ms
     timestamps = spks / fs
     #range_in_s = (0, 120)
     spikes_in_range = timestamps[(timestamps >= range_in_s[0]) & (timestamps <= range_in_s[1])]
-    pre = 0.001 # 1 ms
-    post= 0.002 # 2 ms
+    pre = 0.0015 # 1 ms
+    post= 0.0025 # 2 ms
     cutouts = extract_waveforms(signal, fs, spks, pre, post)
     
     print("Cutout array shape: " + str(cutouts.shape)) # number of spikes x number of samples

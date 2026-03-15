@@ -7,8 +7,8 @@ FILENAME = "C:/Users/Ines/Documents/Multi Channel DataManager/2025/SciLifeLab/08
 CHANNEL_NMR = 46
 
 # Choose which preprocessing steps to do 
-FILTER_BANDPASS = False
-FILTER_LOWPASS = True
+FILTER_BANDPASS = True
+FILTER_LOWPASS = False
 FILTER_WAVELET = False 
 
 # Preprocessing
@@ -19,12 +19,12 @@ LOWPASS_CUTOFF = 50
 HIGHPASS_CUTOFF = 0.5
 
 # Bandpass filter cutoffs
-BANDPASS_LOW = 2
-BANDPASS_HIGH = 60 # To filter out electrical line noise 
+BANDPASS_LOW = 300
+BANDPASS_HIGH = 3000 # To filter out electrical line noise 
 
 # Wavelet filter params
 wavelet_filter = {'NAME':"db4",'LEVEL':None,'MODE':"soft",'TH':1.0}
 
 # Choose thresholding method
 
-# Choose 2 timepoints for the visualizing (but not always necessary)
+PCA_NUMBER = 2

@@ -59,3 +59,5 @@ plot_processed_signal(signal=signal, filtered_signal=filtered_signal, fs=fs.magn
 plot_spike_raster(spikes_in_range)
 
 
+
+

@@ -36,7 +36,7 @@ def plot_processed_signal(signal, filtered_signal, fs, spikes_in_range, dur):
     plt.xlabel("Time (s)")
     plt.ylabel("Voltage (V)")
     plt.title("Detected Spikes")
-    plt.legend()
+    plt.legend(loc="right")
     plt.savefig(f'./imgs/Processed Signal.png')
     plt.show()
 
