@@ -1,8 +1,6 @@
 from pathlib import Path
 import numpy as np
 
-
-
 def ensure_dir(p: Path):
     p.mkdir(parents=True, exist_ok=True)
 

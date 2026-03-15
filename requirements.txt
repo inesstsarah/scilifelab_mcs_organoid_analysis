@@ -11,7 +11,9 @@ networkx
 McsPyDataTools
 pytest
 scikit-learn
-kilosort
-spikeinterface[full]
+#kilosort
+#spikeinterface[full]
 pyedflib
 MEArec
+spkit
+McsPyDataTools

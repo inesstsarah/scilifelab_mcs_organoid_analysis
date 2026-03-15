@@ -6,6 +6,22 @@ import matplotlib.pyplot as plt
 import McsPy
 import McsPy.McsData
 from McsPy import ureg, Q_
+import numpy as np
+
+def plot_signal(signal, fs, title, dur):
+    plt.plot(signal)
+    duration = dur
+    t = np.arange(0, duration, 1/fs)
+    plt.figure(figsize=(10, 4))
+    plt.plot(t, signal, color='blue', linewidth=2)
+    plt.title(f'{title}')
+    plt.xlabel('Time (seconds)')
+    plt.ylabel('Amplitude (V)')
+    plt.grid()
+    plt.xlim([0, duration])
+    plt.savefig(f'./imgs/{title}.png')
+
+    plt.show()
 
 
 def plot_analog_stream_channel(analog_stream, channel_idx, from_in_s=0, to_in_s=None, show=True):

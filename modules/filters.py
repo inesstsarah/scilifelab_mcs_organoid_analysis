@@ -1,5 +1,7 @@
 from scipy import signal
 import numpy as np
+import spkit as sp
+
 
 def bandpass_filter(x, fs, lo, hi, order=3):
     sos = signal.butter(order, [lo, hi], btype='bandpass', fs=fs, output='sos')
@@ -18,3 +20,4 @@ def notch_filter(x, fs, freq=50.0, q=30):
 def mad(x):
     return np.median(np.abs(x - np.median(x))) / 0.6745
 
+#def wavelet_filter(x)
