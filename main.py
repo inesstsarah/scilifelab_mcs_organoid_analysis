@@ -34,7 +34,7 @@ from modules.visualization import plot_signal
 from modules.filters import lowpass_filter, bandpass_filter, wavelet_filter
 from modules.preprocessing import preprocess_file, preprocess_signal
 from modules.processing import thresholding_voltage
-from modules.visualization import plot_processed_signal, plot_spike_raster, plot_mean_waveform, plot_GMM_cluters
+from modules.visualization import plot_processed_signal, plot_spike_raster, plot_mean_waveform, plot_GMM_clusters, plot_autocorrelogram
 from modules.analysis import isi_function, pca_dimension_reduction, gmm_clustering, umap_dimension_reduction
 import config
 
@@ -65,12 +65,18 @@ isi_function(spikes_in_range)
 # Plot the mean waveform
 plot_mean_waveform(cutouts,fs.magnitude)
 
-# Do PCA and UMAP analysis
+# Plot autocorrelogram
+plot_autocorrelogram(spikes_in_range)
+
+# Do PCA and UMAP analysis with GMM
 if(config.PCA_ANALYSIS == True):
     transformed = pca_dimension_reduction(config.PCA_NUMBER,cutouts)
     labels = gmm_clustering(config.GMM_COMPONENTS, transformed)
-    plot_GMM_cluters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025)
-    
+    plot_GMM_clusters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "PCA and GMM Clustering")
+elif(config.UMAP_ANALYSIS == True):
+    transformed = umap_dimension_reduction(cutouts)
+    labels = gmm_clustering(config.GMM_COMPONENTS, transformed)
+    plot_GMM_clusters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "UMAP and GMM Clustering")
 
 
 

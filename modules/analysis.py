@@ -59,10 +59,21 @@ def isi_function(spikes_in_range):
     # Count violations below 1 ms (or 1.5–2 ms if you want to be conservative)
     violations = np.sum(isis_ms < 1.0)
     total_spikes = len(spikes_in_range)
+    isis_ms = isis * 1000
+    
+
 
     print("Total spikes:", total_spikes)
     print("Refractory violations (<1 ms):", violations)
     print("Violation rate (%):", 100 * violations / total_spikes)
+    cv_isi = np.std(isis_ms) / np.mean(isis_ms)
+    print("CV(ISI):", cv_isi) 
+    '''
+    CV ≈ 1 → Poisson‑like, irregular
+    CV < 0.5 → regular firing
+    CV > 1 → bursty / highly irregular
+    '''
+
     # Plot ISI 
     plt.hist(isis_ms, bins=100, range=(0, 50))
     plt.xlabel("ISI (ms)")

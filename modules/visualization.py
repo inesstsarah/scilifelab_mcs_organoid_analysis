@@ -8,6 +8,22 @@ import McsPy.McsData
 from McsPy import ureg, Q_
 import numpy as np
 
+def plot_autocorrelogram(spikes_in_range):
+    lags = []
+    for i in range(len(spikes_in_range)):
+        diffs = spikes_in_range - spikes_in_range[i]
+        diffs = diffs[(diffs > 0) & (diffs < 0.2)]  # up to 200 ms
+        lags.extend(diffs)
+
+    lags_ms = np.array(lags) * 1000
+    plt.hist(lags_ms, bins=100, range=(0, 200))
+    plt.xlabel("Lag (ms)")
+    plt.ylabel("Count")
+    plt.title("Autocorrelogram")
+    plt.savefig("./imgs/Autocorrelogram.png")
+    plt.show()
+
+
 def plot_signal(signal, fs, title, dur):
     plt.plot(signal)
     duration = dur
@@ -40,19 +56,28 @@ def plot_processed_signal(signal, filtered_signal, fs, spikes_in_range, dur):
     plt.savefig(f'./imgs/Processed Signal.png')
     plt.show()
 
-def plot_GMM_cluters(cutouts, labels, n_components,pre,post, fs):
+def plot_GMM_clusters(cutouts, labels, n_components,pre,post, fs, title):
         '''Plot GMM clusters on cutout data'''
         _ = plt.figure(figsize=(8,8))
         for i in range(n_components):
             idx = labels == i
             color = plt.rcParams['axes.prop_cycle'].by_key()['color'][i]
             plot_waveforms(cutouts[idx,:], fs, pre, post, n=100, color=color, show=False)
+        plt.title(title)
+        plt.savefig("./imgs/Clustered Waveforms")
         plt.show()
 
 def plot_mean_waveform(cutouts, fs):
+    '''Plot mean waveform and get SNR of signal'''
+    # TODO: confirm SNR function
     t = np.arange(0, 0.004, 1/fs)
 
     mean_waveform = np.mean(cutouts, axis=0)
+    noise_std = np.std(cutouts[:, :10])  # pre-spike baseline
+    peak_to_peak = np.max(mean_waveform) - np.min(mean_waveform)
+    snr = peak_to_peak / (2 * noise_std)
+    print("SNR (approx):", snr)
+
     plt.plot(mean_waveform)
     plt.title("Mean Waveform")
     plt.savefig("./imgs/Mean Waveform.png")
