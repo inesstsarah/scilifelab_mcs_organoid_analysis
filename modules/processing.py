@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from modules.utils import detect_threshold_crossings, align_to_minimum, extract_waveforms, find_spike_peaks
 from modules.visualization import plot_processed_signal, plot_waveforms
 
-def thresholding_voltage(signal, fs, electrode_stream): #TODO: omit from electrode stream and just plot the filtered signal
+def thresholding_voltage(signal, fs, electrode_stream, range_in_s = (0,120)): #TODO: omit from electrode stream and just plot the filtered signal
     '''Function to threshold signal based on voltage amplitude
     Inputs
         signal = signal
@@ -21,21 +21,15 @@ def thresholding_voltage(signal, fs, electrode_stream): #TODO: omit from electro
     plt.savefig(f'./imgs/Thresholding.png')
     plt.show()
 
-
     crossings = detect_threshold_crossings(signal, fs, spike_threshold, 0.003) # dead time of 3 ms
     spks = align_to_minimum(signal, fs, crossings, 0.002) # search range 2 ms
-
-
-
-    # Align to minimum
-    
     timestamps = spks / fs
-    range_in_s = (0, 120)
+    #range_in_s = (0, 120)
     spikes_in_range = timestamps[(timestamps >= range_in_s[0]) & (timestamps <= range_in_s[1])]
-    pre = 0.001# 1 ms
-    post= 0.002# 2 ms
-
+    pre = 0.001 # 1 ms
+    post= 0.002 # 2 ms
     cutouts = extract_waveforms(signal, fs, spks, pre, post)
+    
     print("Cutout array shape: " + str(cutouts.shape)) # number of spikes x number of samples
     print("First few spks:", spks[:10])
 
