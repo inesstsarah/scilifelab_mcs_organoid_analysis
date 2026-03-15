@@ -13,6 +13,24 @@ def _to_str_list(x):
             out.append(str(v))
     return out
 
+def extract_waveforms(signal, fs, spikes_idx, pre, post):
+    """
+    Extract spike waveforms as signal cutouts around each spike index as a spikes x samples numpy array
+    
+    :param signal: The signal as a 1-dimensional numpy array
+    :param fs: The sampling frequency in Hz
+    :param spikes_idx: The sample index of all spikes as a 1-dim numpy array
+    :param pre: The duration of the cutout before the spike in seconds
+    :param post: The duration of the cutout after the spike in seconds
+    """
+    cutouts = []
+    pre_idx = int(pre * fs)
+    post_idx = int(post * fs)
+    for index in spikes_idx:
+        if index-pre_idx >= 0 and index+post_idx <= signal.shape[0]:
+            cutout = signal[(index-pre_idx):(index+post_idx)]
+            cutouts.append(cutout)
+    return np.stack(cutouts)
 
 def detect_threshold_crossings(signal, fs, threshold, dead_time):
     """
@@ -34,6 +52,7 @@ def detect_threshold_crossings(signal, fs, threshold, dead_time):
         threshold_crossings = threshold_crossings[distance_sufficient]
         distance_sufficient = np.insert(np.diff(threshold_crossings) >= dead_time_idx, 0, True)
     return threshold_crossings
+
 
 def get_next_minimum(signal, index, max_samples_to_search):
     """
@@ -59,3 +78,14 @@ def align_to_minimum(signal, fs, threshold_crossings, search_range):
     search_end = int(search_range*fs)
     aligned_spikes = [get_next_minimum(signal, t, search_end) for t in threshold_crossings]
     return np.array(aligned_spikes)
+
+def find_spike_peaks(signal, fs, crossings, window_ms=1.0):
+    window = int(window_ms * 1e-3 * fs)
+    peaks = []
+    for c in crossings:
+        start = max(0, c)
+        end = min(len(signal), c + window)
+        # find the minimum in this window
+        local_min = np.argmin(signal[start:end]) + start
+        peaks.append(local_min)
+    return np.array(peaks)
