@@ -25,6 +25,11 @@ BANDPASS_HIGH = 3000 # To filter out electrical line noise
 # Wavelet filter params
 wavelet_filter = {'NAME':"db4",'LEVEL':None,'MODE':"soft",'TH':1.0}
 
-# Choose thresholding method
+# Dimensional reduction params
+PCA_ANALYSIS = True
+UMAP_ANALYSIS = False
 
 PCA_NUMBER = 2
+
+# Clustering params
+GMM_COMPONENTS = 3

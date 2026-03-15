@@ -40,6 +40,24 @@ def plot_processed_signal(signal, filtered_signal, fs, spikes_in_range, dur):
     plt.savefig(f'./imgs/Processed Signal.png')
     plt.show()
 
+def plot_GMM_cluters(cutouts, labels, n_components,pre,post, fs):
+        '''Plot GMM clusters on cutout data'''
+        _ = plt.figure(figsize=(8,8))
+        for i in range(n_components):
+            idx = labels == i
+            color = plt.rcParams['axes.prop_cycle'].by_key()['color'][i]
+            plot_waveforms(cutouts[idx,:], fs, pre, post, n=100, color=color, show=False)
+        plt.show()
+
+def plot_mean_waveform(cutouts, fs):
+    t = np.arange(0, 0.004, 1/fs)
+
+    mean_waveform = np.mean(cutouts, axis=0)
+    plt.plot(mean_waveform)
+    plt.title("Mean Waveform")
+    plt.savefig("./imgs/Mean Waveform.png")
+    plt.show()
+
 def plot_spike_raster(spikes_in_range):
     # plot spike train
     plt.plot(spikes_in_range, np.ones_like(spikes_in_range), '|', markersize=100, color='black')

@@ -34,7 +34,8 @@ from modules.visualization import plot_signal
 from modules.filters import lowpass_filter, bandpass_filter, wavelet_filter
 from modules.preprocessing import preprocess_file, preprocess_signal
 from modules.processing import thresholding_voltage
-from modules.visualization import plot_processed_signal, plot_spike_raster
+from modules.visualization import plot_processed_signal, plot_spike_raster, plot_mean_waveform, plot_GMM_cluters
+from modules.analysis import isi_function, pca_dimension_reduction, gmm_clustering, umap_dimension_reduction
 import config
 
 # Open file
@@ -53,10 +54,29 @@ filtered_signal = preprocess_signal(signal=signal, fs=fs.magnitude)
 
 # Plot the filtered signal
 plot_signal(signal=filtered_signal, fs = fs.magnitude, title=f"Filtered Signal of Channel {CHANNEL_NMR}", dur = duration)
-spikes_in_range = thresholding_voltage(filtered_signal, fs.magnitude, electrode_stream)
+spikes_in_range, cutouts = thresholding_voltage(filtered_signal, fs.magnitude, electrode_stream)
 plot_processed_signal(signal=signal, filtered_signal=filtered_signal, fs=fs.magnitude, spikes_in_range = spikes_in_range, dur = duration)
 
 plot_spike_raster(spikes_in_range)
+
+# Analyze  ISI to get the violation percentage
+isi_function(spikes_in_range)
+
+# Plot the mean waveform
+plot_mean_waveform(cutouts,fs.magnitude)
+
+# Do PCA and UMAP analysis
+if(config.PCA_ANALYSIS == True):
+    transformed = pca_dimension_reduction(config.PCA_NUMBER,cutouts)
+    labels = gmm_clustering(config.GMM_COMPONENTS, transformed)
+    plot_GMM_cluters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025)
+    
+
+
+
+
+
+
 
 
 

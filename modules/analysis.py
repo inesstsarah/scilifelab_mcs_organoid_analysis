@@ -7,6 +7,7 @@ import config
 import matplotlib.pyplot as plt
 from sklearn.mixture import GaussianMixture
 import umap
+import numpy as np
 
 
 
@@ -38,11 +39,35 @@ def gmm_clustering(n_components, transformed):
         _ = plt.xlabel('Principal Component 1')
         _ = plt.ylabel('Principal Component 2')
         _ = plt.axis('tight')
+    plt.savefig("./imgs/GMM Clustering.png")
     plt.show()
+    return labels
 
 
 def umap_dimension_reduction(cutouts):
     fit = umap.UMAP()
     u = fit.fit_transform(cutouts)
     return u
+
+
+def isi_function(spikes_in_range):
+    '''Do ISI (Inter-spike interval) analysis'''
+    isis = np.diff(spikes_in_range)  # in seconds
+    # Convert to ms
+    isis_ms = isis * 1000  
+
+    # Count violations below 1 ms (or 1.5–2 ms if you want to be conservative)
+    violations = np.sum(isis_ms < 1.0)
+    total_spikes = len(spikes_in_range)
+
+    print("Total spikes:", total_spikes)
+    print("Refractory violations (<1 ms):", violations)
+    print("Violation rate (%):", 100 * violations / total_spikes)
+    # Plot ISI 
+    plt.hist(isis_ms, bins=100, range=(0, 50))
+    plt.xlabel("ISI (ms)")
+    plt.ylabel("Count")
+    plt.title("Inter-spike interval histogram")
+    plt.savefig("./imgs/ISI Histogram.png")
+    plt.show()
 
