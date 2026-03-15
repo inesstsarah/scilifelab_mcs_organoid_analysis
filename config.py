@@ -20,7 +20,7 @@ HIGHPASS_CUTOFF = 0.5
 
 # Bandpass filter cutoffs
 BANDPASS_LOW = 300
-BANDPASS_HIGH = 3000 # To filter out electrical line noise 
+BANDPASS_HIGH = 3000 # To get spikes 
 
 # Wavelet filter params
 wavelet_filter = {'NAME':"db4",'LEVEL':None,'MODE':"soft",'TH':1.0}
@@ -32,4 +32,7 @@ UMAP_ANALYSIS = False
 PCA_NUMBER = 2
 
 # Clustering params
+KMEANS_CLUSTERING = True
+GMM_CLUSTERING = False
 GMM_COMPONENTS = 3
+KMEANS_CLUSTERS = 3

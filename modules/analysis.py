@@ -5,7 +5,9 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import config
 import matplotlib.pyplot as plt
-from sklearn.mixture import GaussianMixture
+from sklearn.mixture import GaussianMixture  
+from sklearn.cluster import KMeans
+
 import umap
 import numpy as np
 
@@ -25,6 +27,22 @@ def pca_dimension_reduction(PCA_NUMBER, cutouts):
     pca.n_components = PCA_NUMBER
     transformed = pca.fit_transform(scaled_cutouts)
     return transformed
+
+def kmeans_clustering(n_components, transformed):
+    kmeans = KMeans(n_clusters=n_components, random_state=0, n_init="auto").fit(transformed)
+    labels = kmeans.labels_
+    _ = plt.figure(figsize=(8,8))
+    for i in range(n_components):
+        idx = labels == i
+        _ = plt.plot(transformed[idx,0], transformed[idx,1],'.')
+        _ = plt.title('Cluster assignments by KMeans')
+        _ = plt.xlabel('Principal Component 1')
+        _ = plt.ylabel('Principal Component 2')
+        _ = plt.axis('tight')
+    plt.savefig("./imgs/KMeans Clustering.png")
+    plt.show()
+    return labels
+
 
 
 def gmm_clustering(n_components, transformed):

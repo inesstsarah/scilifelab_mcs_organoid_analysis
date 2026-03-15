@@ -35,7 +35,7 @@ from modules.filters import lowpass_filter, bandpass_filter, wavelet_filter
 from modules.preprocessing import preprocess_file, preprocess_signal
 from modules.processing import thresholding_voltage
 from modules.visualization import plot_processed_signal, plot_spike_raster, plot_mean_waveform, plot_GMM_clusters, plot_autocorrelogram
-from modules.analysis import isi_function, pca_dimension_reduction, gmm_clustering, umap_dimension_reduction
+from modules.analysis import isi_function, pca_dimension_reduction, gmm_clustering, umap_dimension_reduction, kmeans_clustering
 import config
 
 # Open file
@@ -43,9 +43,11 @@ FILE_PATH = config.FILENAME
 # Get specific analog signal using index from config
 CHANNEL_NMR = config.CHANNEL_NMR 
 signal, electrode_stream, fs = preprocess_file(FILE_PATH, CHANNEL_NMR)
-
+#NOTE: this is just for the purposes of the demo, usually would use whole signal but there is one really big spike
+#signal = signal[0:2000000]
 # Filtering
-duration = electrode_stream.channel_data.shape[1]/fs.magnitude
+#duration = electrode_stream.channel_data.shape[1]/fs.magnitude
+duration = len(signal)/fs.magnitude
 print(duration)
 # Plot original unfiltered signal
 plot_signal(signal=signal, fs = fs.magnitude, title=f"Unfiltered Signal of Channel {CHANNEL_NMR}", dur = duration)
@@ -69,16 +71,24 @@ plot_mean_waveform(cutouts,fs.magnitude)
 plot_autocorrelogram(spikes_in_range)
 
 # Do PCA and UMAP analysis with GMM
-if(config.PCA_ANALYSIS == True):
+if(config.PCA_ANALYSIS == True and config.GMM_CLUSTERING == True):
     transformed = pca_dimension_reduction(config.PCA_NUMBER,cutouts)
     labels = gmm_clustering(config.GMM_COMPONENTS, transformed)
     plot_GMM_clusters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "PCA and GMM Clustering")
-elif(config.UMAP_ANALYSIS == True):
+elif(config.UMAP_ANALYSIS == True and config.GMM_CLUSTERING == True):
     transformed = umap_dimension_reduction(cutouts)
     labels = gmm_clustering(config.GMM_COMPONENTS, transformed)
     plot_GMM_clusters(cutouts, labels, config.GMM_COMPONENTS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "UMAP and GMM Clustering")
 
+if(config.PCA_ANALYSIS == True and config.KMEANS_CLUSTERING == True):
+    transformed = pca_dimension_reduction(config.PCA_NUMBER,cutouts)
+    labels = kmeans_clustering(config.KMEANS_CLUSTERS, transformed)
+    plot_GMM_clusters(cutouts, labels, config.KMEANS_CLUSTERS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "PCA and KMeans Clustering")
 
+elif(config.UMAP_ANALYSIS == True and config.KMEANS_CLUSTERING == True):
+    transformed = umap_dimension_reduction(cutouts)
+    labels = kmeans_clustering(config.KMEANS_CLUSTERS, transformed)
+    plot_GMM_clusters(cutouts, labels, config.KMEANS_CLUSTERS,pre=0.0015,post=0.0025, fs = fs.magnitude, title = "PCA and KMeans Clustering")
 
 
 
